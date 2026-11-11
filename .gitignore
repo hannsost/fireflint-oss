@@ -28,6 +28,7 @@ modules/OPERATOR-DEVELOPMENT-PLAN.md
 # --- secrets & local env (added for OSS release) ---
 !**/.env.example
 *.pem
+!crates/sitegraph-api/tests/oidc-keys/*.pem
 *.key
 *.p12
 *.pfx

@@ -5,5 +5,6 @@ useDefault = true
 [allowlist]
 description = "Intentional public test fixtures (never used in any deployment)"
 paths = [
-  '''crates/sitegraph-api/tests/oidc-keys/.*''',
+  '''crates/sitegraph-api/tests/oidc-keys/test-key\.pem''',
+  '''crates/sitegraph-api/tests/oidc-keys/rotated-key\.pem''',
 ]
