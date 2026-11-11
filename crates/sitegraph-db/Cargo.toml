@@ -1,0 +1,26 @@
+[package]
+name = "sitegraph-db"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+utoipa.workspace = true
+sitegraph-company-hub = { path = "../platform/company-hub" }
+sitegraph-domain = { path = "../sitegraph-domain" }
+sitegraph-platform-data-residency = { path = "../platform/data-residency" }
+sqlx.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+chrono-tz.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+ring.workspace = true
+sha2.workspace = true
+rand.workspace = true
+hex.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true

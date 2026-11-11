@@ -1,0 +1,20 @@
+.devices-page, .devices-page > *, .devices-page .hub-title > div { min-width: 0; }
+.devices-page .hub-title h1, .devices-page td, .devices-page th,
+.devices-page summary, .devices-page .hint { overflow-wrap: anywhere; }
+.devices-filters > label:first-child { flex: 1 1 18rem; min-width: 0; }
+.devices-page select { max-width: 100%; min-width: 0; }
+.devices-page caption.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 650px) {
+  .devices-filters > label:first-child { flex-basis: 100%; }
+}

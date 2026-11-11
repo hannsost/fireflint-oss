@@ -1,0 +1,15 @@
+export const privacyEventTypes = {
+  requestReceived: "privacy.request.received",
+  identityVerified: "privacy.request.identity_verified",
+  discoveryCompleted: "privacy.discovery.completed",
+  exportCreated: "privacy.export.created",
+  actionCompleted: "privacy.action.completed",
+  actionBlocked: "privacy.action.blocked",
+  requestCompleted: "privacy.request.completed",
+  consentGranted: "privacy.consent.granted",
+  consentWithdrawn: "privacy.consent.withdrawn",
+  dpiaSaved: "privacy.dpia.saved",
+  breachDetected: "privacy.breach.detected",
+  breachAssessed: "privacy.breach.assessed",
+  breachNotificationRecorded: "privacy.breach.notification_recorded",
+} as const;

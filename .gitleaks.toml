@@ -1,0 +1,9 @@
+# Gitleaks configuration for the FireFlint open-source repository.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentional public test fixtures (never used in any deployment)"
+paths = [
+  '''crates/sitegraph-api/tests/oidc-keys/.*''',
+]

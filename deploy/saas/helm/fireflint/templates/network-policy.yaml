@@ -1,0 +1,73 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "fireflint.name" . }}-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values: [api, bootstrap, maintenance]
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+              app.kubernetes.io/component: admin
+      ports: [{ protocol: TCP, port: 8080 }]
+    {{- if and .Values.campaigns.dispatchExistingSecret .Values.campaigns.ingressPeers }}
+    - from: {{- toYaml .Values.campaigns.ingressPeers | nindent 8 }}
+      ports: [{ protocol: TCP, port: 8080 }]
+    {{- end }}
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: {{ .Values.networkPolicy.dnsNamespace | quote }} }
+          podSelector:
+            matchLabels: {{- toYaml .Values.networkPolicy.dnsPodLabels | nindent 14 }}
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to: {{- toYaml .Values.networkPolicy.databasePeers | nindent 8 }}
+      ports: [{ protocol: TCP, port: {{ .Values.networkPolicy.databasePort }} }]
+    {{- if and .Values.oidc.enabled .Values.networkPolicy.oidcPeers }}
+    - to: {{- toYaml .Values.networkPolicy.oidcPeers | nindent 8 }}
+      ports: [{ protocol: TCP, port: {{ .Values.networkPolicy.oidcPort }} }]
+    {{- end }}
+    {{- if .Values.networkPolicy.allowPublicHTTPS }}
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4]
+      ports: [{ protocol: TCP, port: 443 }]
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "fireflint.name" . }}-admin
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+      app.kubernetes.io/component: admin
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from: {{- toYaml .Values.networkPolicy.ingressPeers | nindent 8 }}
+      ports: [{ protocol: TCP, port: 8080 }]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: {{ .Values.networkPolicy.dnsNamespace | quote }} }
+          podSelector:
+            matchLabels: {{- toYaml .Values.networkPolicy.dnsPodLabels | nindent 14 }}
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+              app.kubernetes.io/component: api
+      ports: [{ protocol: TCP, port: 8080 }]
+{{- end }}

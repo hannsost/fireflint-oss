@@ -1,0 +1,15 @@
+{{- if not .Values.assets.existingClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "fireflint.claim" . }}
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes: [{{ .Values.assets.accessMode }}]
+  storageClassName: {{ .Values.assets.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.assets.size | quote }}
+{{- end }}

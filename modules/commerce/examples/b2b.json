@@ -1,0 +1,20 @@
+{
+  "profile": "b2b-default",
+  "modules": {
+    "catalog": "sitegraph-catalog",
+    "pricing": "erp-customer-pricing",
+    "inventory": "erp-inventory",
+    "customers": "sitegraph-organization-accounts",
+    "cart": "sitegraph-cart",
+    "checkout": "sitegraph-quote-checkout",
+    "quotes": "sitegraph-quotes",
+    "approvals": "sitegraph-approvals",
+    "invoicing": "erp-invoicing",
+    "erp": "erp-connector"
+  },
+  "settings": {
+    "purchaseOrderNumberRequired": true,
+    "costCenterRequired": false,
+    "allowInvoicePayment": true
+  }
+}

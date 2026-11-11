@@ -1,0 +1,15 @@
+{
+  "profile": "b2c-default",
+  "modules": {
+    "catalog": "sitegraph-catalog",
+    "pricing": "sitegraph-public-pricing",
+    "inventory": "sitegraph-inventory",
+    "cart": "sitegraph-cart",
+    "checkout": "sitegraph-direct-checkout",
+    "payment": "payment-provider",
+    "tax": "eu-consumer-tax",
+    "fulfillment": "parcel-shipping",
+    "discounts": "sitegraph-promotions",
+    "returns": "sitegraph-returns"
+  }
+}

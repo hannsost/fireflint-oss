@@ -1,0 +1,52 @@
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphStorageProfile
+metadata:
+  name: standard
+  namespace: sitegraph-system
+spec:
+  postgres:
+    image: postgres:17
+    majorVersion: 17
+    replicas: 1
+  volume:
+    storageClassName: standard
+    size: 10Gi
+    allowExpansion: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+---
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphDataStore
+metadata:
+  name: org-a-content
+  namespace: sitegraph-system
+spec:
+  organizationId: org-a
+  domain: content
+  dataCategory: personal
+  topology: database_per_tenant
+  region: eu-central
+  storageProfileRef: standard
+  desiredSchemaVersion: "1"
+  deletionPolicy: Retain
+---
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphStorageBinding
+metadata:
+  name: org-a-content
+  namespace: sitegraph-system
+spec:
+  selector:
+    organizationId: org-a
+    domain: content
+    dataCategory: personal
+    minimumClassification: confidential
+    region: eu-central
+  dataStoreRef: org-a-content
+  priority: 100
+

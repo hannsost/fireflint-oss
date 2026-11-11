@@ -1,0 +1,79 @@
+name: SaaS release package
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/saas-release.yml
+      - Cargo.toml
+      - Cargo.lock
+      - rust-toolchain.toml
+      - .dockerignore
+      - LICENSE
+      - crates/**
+      - operator/**
+      - migrations/**
+      - admin/**
+      - adapters/flintplate-contract/fixtures/**
+      - deploy/saas/**
+      - tools/check_saas_deploy.py
+      - tools/package_saas_release.py
+      - tools/test_saas_release_package.py
+      - tools/test_production_lifecycle.py
+      - docs/SAAS-DEPLOYMENT.md
+  workflow_dispatch:
+    inputs:
+      build_images:
+        description: Build both release images locally on the runner (no push)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install offline validation tools
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-yaml
+          mkdir -p "$RUNNER_TEMP/fireflint-helm"
+          curl --fail --silent --show-error --location \
+            https://get.helm.sh/helm-v4.3.0-linux-amd64.tar.gz \
+            -o "$RUNNER_TEMP/fireflint-helm/helm.tar.gz"
+          printf '%s  %s\n' 86584a54def73570558f66f5111cc53dfed56689637ae32c1201205d494f54fb \
+            "$RUNNER_TEMP/fireflint-helm/helm.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/fireflint-helm/helm.tar.gz" -C "$RUNNER_TEMP/fireflint-helm"
+      - name: Validate package and rejected production values
+        run: /usr/bin/python3 tools/check_saas_deploy.py --helm "$RUNNER_TEMP/fireflint-helm/linux-amd64/helm"
+      - name: Check source packaging boundaries
+        run: python3 tools/test_saas_release_package.py
+      - name: Freeze build inputs and chart
+        run: |
+          python3 tools/package_saas_release.py --output "$RUNNER_TEMP/fireflint-release"
+          "$RUNNER_TEMP/fireflint-helm/linux-amd64/helm" package deploy/saas/helm/fireflint --destination "$RUNNER_TEMP/fireflint-release"
+      - name: Build API image
+        if: github.event_name == 'workflow_dispatch' && inputs.build_images
+        run: |
+          SOURCE_SHA=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_sha256"])' "$RUNNER_TEMP/fireflint-release/manifest.json")
+          docker build --build-arg "FIREFLINT_BUILD_REVISION=$GITHUB_SHA" --build-arg "FIREFLINT_SOURCE_SHA256=$SOURCE_SHA" -f "$RUNNER_TEMP/fireflint-release/source/deploy/saas/api.Dockerfile" -t fireflint-api:ci "$RUNNER_TEMP/fireflint-release/source"
+      - name: Build administration image
+        if: github.event_name == 'workflow_dispatch' && inputs.build_images
+        run: |
+          SOURCE_SHA=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_sha256"])' "$RUNNER_TEMP/fireflint-release/manifest.json")
+          docker build --build-arg "FIREFLINT_BUILD_REVISION=$GITHUB_SHA" --build-arg "FIREFLINT_SOURCE_SHA256=$SOURCE_SHA" -f "$RUNNER_TEMP/fireflint-release/source/deploy/saas/admin.Dockerfile" -t fireflint-admin:ci "$RUNNER_TEMP/fireflint-release/source"
+      - name: Upload reviewable release inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: fireflint-release-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/fireflint-release/manifest.json
+            ${{ runner.temp }}/fireflint-release/source.tar.gz
+            ${{ runner.temp }}/fireflint-release/fireflint-*.tgz
+          if-no-files-found: error

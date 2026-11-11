@@ -1,0 +1,8 @@
+[Unit]
+Description=FireFlint local development preview (PostgreSQL + API + admin)
+Documentation=file://%h/Projects/fireflint/deploy/systemd/README.md
+Wants=fireflint-db.service fireflint-core.service fireflint-admin.service
+After=fireflint-db.service fireflint-core.service fireflint-admin.service
+
+[Install]
+WantedBy=default.target

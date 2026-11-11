@@ -1,0 +1,41 @@
+import { StyleSheet } from 'react-native';
+
+export const colors = {
+  ink: '#172D29', muted: '#546B65', paper: '#F5F5EF', white: '#FFFFFF',
+  line: '#D8E1DB', green: '#254F42', lightGreen: '#E7F0E9', flame: '#B8482D',
+  lightFlame: '#FBEDE5', danger: '#A03230', dangerBg: '#FDECEA',
+};
+
+export const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  screen: { flex: 1, backgroundColor: colors.paper },
+  page: { width: '100%', maxWidth: 760, alignSelf: 'center', padding: 22, gap: 20, paddingBottom: 44 },
+  top: { paddingHorizontal: 22, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.line, backgroundColor: colors.paper },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' },
+  spread: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
+  title: { fontSize: 29, fontWeight: '700', lineHeight: 35, color: colors.ink, letterSpacing: -0.7 },
+  heading: { fontSize: 20, fontWeight: '700', lineHeight: 27, color: colors.ink },
+  label: { fontSize: 15, fontWeight: '600', color: colors.ink, lineHeight: 22 },
+  body: { fontSize: 16, lineHeight: 24, color: colors.ink },
+  muted: { fontSize: 14, lineHeight: 21, color: colors.muted },
+  eyebrow: { fontSize: 12, fontWeight: '700', color: colors.flame, letterSpacing: 1.4, textTransform: 'uppercase' },
+  card: { backgroundColor: colors.white, borderRadius: 18, padding: 18, borderWidth: 1, borderColor: colors.line, gap: 12 },
+  field: { gap: 7 },
+  input: { borderWidth: 1, borderColor: '#9BAEA4', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 12, minHeight: 50, fontSize: 16, color: colors.ink, backgroundColor: colors.white },
+  textArea: { minHeight: 110, textAlignVertical: 'top' },
+  readonly: { backgroundColor: '#EDF1EC', padding: 13, borderRadius: 10 },
+  button: { minHeight: 48, paddingHorizontal: 17, paddingVertical: 12, borderRadius: 12, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, backgroundColor: colors.green },
+  buttonText: { fontSize: 15, fontWeight: '700', color: colors.white, textAlign: 'center', lineHeight: 22 },
+  secondary: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  secondaryText: { color: colors.green },
+  ghost: { backgroundColor: 'transparent' },
+  disabled: { opacity: 0.45 },
+  pressed: { opacity: 0.76 },
+  badge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8, backgroundColor: colors.lightGreen, alignSelf: 'flex-start' },
+  badgeText: { fontSize: 12, color: colors.green, fontWeight: '700', lineHeight: 18 },
+  notice: { padding: 15, borderRadius: 12, backgroundColor: colors.lightFlame, gap: 6 },
+  error: { backgroundColor: colors.dangerBg },
+  errorText: { color: colors.danger, fontSize: 15, lineHeight: 22 },
+  divider: { height: 1, backgroundColor: colors.line, marginVertical: 4 },
+  privacy: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: colors.paper, alignItems: 'center', justifyContent: 'center', gap: 14 },
+});

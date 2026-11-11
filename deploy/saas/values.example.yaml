@@ -1,0 +1,37 @@
+# Replace every YOUR_* placeholder. This file contains no credentials.
+runtime:
+  existingSecret: fireflint-runtime
+  # Provider hosts allowed for AI connections; add further hosts as a comma-separated list.
+  aiAllowedProviderHosts: api.anthropic.com
+api:
+  image:
+    repository: YOUR_REGISTRY/fireflint-api
+    digest: sha256:YOUR_API_DIGEST
+admin:
+  image:
+    repository: YOUR_REGISTRY/fireflint-admin
+    digest: sha256:YOUR_ADMIN_DIGEST
+assets:
+  storageClass: YOUR_STORAGE_CLASS
+  size: 10Gi
+  accessMode: ReadWriteOnce
+ingress:
+  className: YOUR_INGRESS_CLASS
+  host: fireflint.example.com
+  tlsSecretName: fireflint-tls
+networkPolicy:
+  ingressPeers:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: YOUR_INGRESS_NAMESPACE
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: YOUR_INGRESS_CONTROLLER
+  databasePeers:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: YOUR_DATABASE_NAMESPACE
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: YOUR_POSTGRES_LABEL
+  allowPublicHTTPS: false

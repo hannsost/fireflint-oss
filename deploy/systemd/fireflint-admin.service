@@ -1,0 +1,31 @@
+[Unit]
+Description=FireFlint development admin (installed Vite, 0.0.0.0:5174)
+Documentation=file://%h/Projects/fireflint/deploy/systemd/README.md
+Wants=fireflint-core.service
+After=fireflint-core.service
+PartOf=fireflint.target
+StartLimitIntervalSec=600
+StartLimitBurst=3
+
+[Service]
+Type=exec
+WorkingDirectory=%h/Projects/fireflint
+Environment=PATH=/usr/bin:/bin
+Environment=SITEGRAPH_LOAD_DOTENV=0
+Environment=NODE_ENV=development
+Environment=ADMIN_PORT=5174
+Environment=VITE_API_URL=http://localhost:8090
+Environment=VITE_BFF_URL=http://localhost:8091
+UnsetEnvironment=NODE_OPTIONS
+ExecStartPre=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh preflight-admin
+ExecStart=/usr/bin/flock --shared --nonblock --no-fork %h/Projects/fireflint/data/local/stack.lock /usr/bin/node %h/Projects/fireflint/admin/node_modules/vite/bin/vite.js admin --host 0.0.0.0 --port 5174 --strictPort
+ExecStartPost=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh ready-admin
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=60
+TimeoutStopSec=20
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=fireflint.target

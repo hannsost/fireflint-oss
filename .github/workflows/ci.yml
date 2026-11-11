@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: Rust (fmt · clippy · test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy (deny warnings)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --locked --workspace
+      - name: Build production lifecycle executable
+        run: cargo build --locked -p sitegraph-bin
+      - name: Start isolated PostgreSQL fixture
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y podman
+          podman run --detach --name fireflint-release-db \
+            --publish 127.0.0.1:15433:5432 \
+            --env POSTGRES_USER=fireflint_test \
+            --env POSTGRES_PASSWORD=release-tests-only \
+            --env POSTGRES_DB=fireflint_release_test \
+            docker.io/library/postgres:16-alpine
+          for attempt in $(seq 1 40); do
+            if podman exec fireflint-release-db pg_isready -U fireflint_test; then break; fi
+            sleep 1
+          done
+          podman exec fireflint-release-db pg_isready -U fireflint_test
+      - name: Production configuration, migrations, bootstrap and session lifecycle
+        run: python3 tools/test_production_lifecycle.py --binary target/debug/sitegraph --report production-lifecycle.json
+      - name: Preserve lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-lifecycle
+          path: production-lifecycle.json
+          if-no-files-found: warn
+
+  local-stack:
+    name: Local stack lifecycle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+      - name: Shell syntax and process regression
+        run: |
+          bash -n run-local.sh stop-local.sh tools/local-stack.sh
+          python3 tools/test_local_stack.py
+
+  admin:
+    name: Admin UI (typecheck · unit · build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+      - run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Build
+        run: npm run build

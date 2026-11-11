@@ -1,0 +1,4 @@
+# Pin the toolchain channel so local builds match CI (fmt/clippy/test).
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy"]

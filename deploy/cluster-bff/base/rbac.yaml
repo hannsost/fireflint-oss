@@ -1,0 +1,27 @@
+# Strictly read-only, namespace-scoped. No writes, no ClusterRole, no wildcard.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sitegraph-cluster-bff
+  namespace: sitegraph-system
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "persistentvolumeclaims"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets", "deployments"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sitegraph-cluster-bff
+  namespace: sitegraph-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sitegraph-cluster-bff
+subjects:
+  - kind: ServiceAccount
+    name: sitegraph-cluster-bff
+    namespace: sitegraph-system

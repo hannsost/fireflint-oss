@@ -1,0 +1,193 @@
+{
+  "document_version": 1,
+  "is_runtime_configuration": false,
+  "task_id": "4f7655a3-05f9-4b58-9aa5-99e9bbae5144",
+  "reviewed_on": "2026-09-22",
+  "status": "full_local_source_to_delivery_validated_customer_pilot_pending",
+  "live_acceptance_complete": false,
+  "e1_2_ready": false,
+  "maintenance_release_evidence": null,
+  "source": {
+    "product": "FlintPlate",
+    "installation": null,
+    "base_url": null,
+    "read_method": "GET",
+    "read_path": "/device/v1/fireflint/snapshot",
+    "server_build": null,
+    "api_contract_evidence": "docs/E1-FLINTPLATE-LESEZUGANG-2026-09-22.md",
+    "response_consistency_contract": "Published item snapshots; menu_revision is SHA-256 of normalized items only, not a monotonic version; published_at is snapshot generation time. Full cross-query consistency not established by this review.",
+    "error_contract": "401 missing/unknown/expired/revoked device key;403 missing menu:read or inactive customer. Endpoint source tests passed; customer runtime not assigned.",
+    "schema_contract": {
+      "schema_version": 1,
+      "received_on": "2026-09-11",
+      "evidence": "adapters/flintplate-contract/schema/source.json"
+    },
+    "reviewed_repository_commit": "50e78b3",
+    "reviewed_repository_commit_is_runtime_build": false,
+    "prior_manager_read_path": "/gastro/venues/{venue_id}/fireflint/snapshot"
+  },
+  "source_access_contract": {
+    "auth_scheme": "X-FlintPlate-Key",
+    "principal_reference": null,
+    "read_scopes": [
+      "menu:read"
+    ],
+    "source_tenant_binding_evidence": null,
+    "venue_binding_evidence": null,
+    "expires_at": null,
+    "rotation_contract": "FireFlint owner replaces encrypted key at the same immutable canonical origin using original connection revision; source key lifecycle managed by FlintPlate. Customer operating procedure pending.",
+    "revocation_contract": "Source rejects revoked credentials on subsequent fetches; FireFlint disables fetch/apply when its connection is disabled. No automatic withdrawal of prior imports/publication.",
+    "already_fetched_response_policy": "Received snapshots remain explicitly importable like manual files under current FireFlint authorization and original CAS; no source recheck during apply.",
+    "secure_runtime_delivery_method": null,
+    "credential_values_permitted_in_document": false,
+    "required_venue_roles": [],
+    "dedicated_snapshot_read_principal_available": false,
+    "source_authorization_evidence": "docs/E1-FLINTPLATE-LESEZUGANG-2026-09-22.md",
+    "source_authorization_scope_note": "Device key determines tenant/venue. Scope also permits existing public catalog read; no exclusive snapshot-only scope claimed. Successful read updates last_seen_at. Concrete customer principal remains unassigned.",
+    "snapshot_read_endpoint_implemented": true
+  },
+  "mapping": {
+    "source_tenant": null,
+    "source_venue_id": null,
+    "source_menu_id": null,
+    "fireflint_org_id": null,
+    "fireflint_connection_id": null,
+    "fireflint_mapping_revision": null,
+    "fireflint_content_type": "gastro_menu",
+    "fireflint_content_id": null,
+    "reviewed_content_revision": null,
+    "channels": [
+      {
+        "label": "A",
+        "website_id": null,
+        "slug": null,
+        "org_id": null
+      },
+      {
+        "label": "B",
+        "website_id": null,
+        "slug": null,
+        "org_id": null
+      }
+    ],
+    "synthetic_fixture_run_id": null,
+    "creation_evidence": null
+  },
+  "fireflint_test_plan": {
+    "profile": "e1",
+    "bind_host": "127.0.0.1",
+    "api_port": 28190,
+    "admin_port": 28191,
+    "database_port": 25433,
+    "database_container": "fireflint-hub-db",
+    "database": "fireflint_hub_test",
+    "database_user": "fireflint_hub_test",
+    "runtime_verified": true,
+    "currently_running": false,
+    "api_systemd_unit": "fireflint-e1-full-api.service",
+    "admin_systemd_unit": "fireflint-e1-full-preview.service",
+    "fixture_manifest_reference": "/srv/fireflint-work/fireflint-e1-full/evidence/validation.json",
+    "resource_ownership_evidence": "docs/E1-VOLLSTAENDIGER-MENUEABLAUF-2026-09-22.md",
+    "restart_scope_evidence": "/srv/fireflint-work/fireflint-e1-full/evidence/receiver-restart.json",
+    "cleanup_policy": "Completed: own receiver, preview container, source containers/network/private credentials removed; pre-existing Hub database, organizations and all six FireFlint-related services preserved.",
+    "prior_release_profile_note": "Release/mobile ports 18090/15433 were not used or reset."
+  },
+  "confirmations": {
+    "source_owner": {
+      "evidence": null,
+      "confirmed_at": null,
+      "code_review_evidence": "docs/E1-FLINTPLATE-LESEZUGANG-2026-09-22.md",
+      "review_is_joint_live_acceptance": false
+    },
+    "fireflint_owner": {
+      "mapping_evidence": null,
+      "confirmed_at": null
+    },
+    "joint_live_evidence": null
+  },
+  "receiver_implementation": {
+    "started_on": "2026-09-22",
+    "contract": "docs/E1-AUTHENTIFIZIERTE-MENUEVORSCHAU-2026-09-22.md",
+    "scoped_read_path": "/device/v1/fireflint/snapshot",
+    "auth_scheme": "X-FlintPlate-Key",
+    "scope": "menu:read",
+    "validation_complete": true,
+    "production_or_customer_acceptance": false,
+    "runtime_sha256": "420b09c30cf84f9f833e382cc3a2f4d6507f7d709be8e21fce345fd6e330961d",
+    "migration": 27,
+    "local_preview": "http://localhost:5174/hub/integrations/flintplate",
+    "rust_workspace_passed": 243,
+    "rust_workspace_ignored": 7,
+    "api_db_passed": 18,
+    "browser_real_api_passed": 9,
+    "browser_transport_mocks_passed": 2,
+    "publication_recovery_passed": 19,
+    "isolated_source_transport_passed": true,
+    "browser_full_source_passed": 10,
+    "full_authenticated_fetch_to_delivery_validated": true,
+    "latest_full_local_validation": "docs/E1-VOLLSTAENDIGER-MENUEABLAUF-2026-09-22.md"
+  },
+  "isolated_source_test": {
+    "synthetic_only": true,
+    "run_id": "1f197a94-9e44-4a66-b8bd-62fd66d822d6",
+    "source_venue_id": "78d6de00-527f-4a0e-927e-786b62e6f520",
+    "menu_revision": "e44ae9ad5a754dca8713b109b53f35db4af55078cc741680334287a94c81fd33",
+    "test": "flintplate::transport::tests::real_source_fixture_snapshot",
+    "passed": true,
+    "public_https_tls_tested": false,
+    "full_fetch_endpoint_with_db_tested_against_source": false,
+    "evidence": "/srv/fireflint-work/fireflint-e1-live/evidence/real-source.log",
+    "cleanup_confirmed": true,
+    "cleanup_evidence": "/srv/fireflint-work/fireflint-e1-live/evidence/flintplate-cleanup.json"
+  },
+  "technical_e1_local_complete": true,
+  "readiness_scope": "e1_2_ready and live_acceptance_complete refer to a concrete customer installation, public TLS path, principal and jointly confirmed mapping; full local functionality is validated.",
+  "full_local_source_test": {
+    "synthetic_only": true,
+    "run_id": "74a43568-2ca6-43ec-a8a7-f6fe2c35e9d8",
+    "source_venue_id": "14483881-d5bf-4422-a9dc-dfc84a589ed2",
+    "evidence": "docs/E1-VOLLSTAENDIGER-MENUEABLAUF-2026-09-22.md",
+    "raw_evidence": "/srv/fireflint-work/fireflint-e1-full/evidence/validation.json",
+    "full_fetch_endpoint_with_db_tested_against_source": true,
+    "browser_to_two_website_delivery_passed": true,
+    "passed": 10,
+    "failed": 0,
+    "workers": 1,
+    "automatic_retries": 0,
+    "fabricated_fetch_responses": 0,
+    "post_io_races_passed": 5,
+    "actual_receiver_restart_and_durable_replay_passed": true,
+    "source_price_steps_cents": [
+      750,
+      875,
+      1000
+    ],
+    "public_https_tls_tested": false,
+    "profile": "e1",
+    "api_port": 28190,
+    "admin_port": 28191,
+    "database_port": 25433,
+    "receiver_cleanup_confirmed": true,
+    "source_cleanup_confirmed": true,
+    "cleanup_evidence": "/srv/fireflint-work/fireflint-e1-full/evidence/source-cleanup-root-check.json"
+  },
+  "prior_hub_test_plan": {
+    "profile": "hub",
+    "bind_host": "127.0.0.1",
+    "api_port": 28090,
+    "admin_port": 28091,
+    "database_port": 25433,
+    "database_container": "fireflint-hub-db",
+    "database": "fireflint_hub_test",
+    "database_user": "fireflint_hub_test",
+    "runtime_verified": true,
+    "resource_ownership_evidence": "docs/E1-MANUELLER-WIEDERANLAUF-2026-09-22.md",
+    "api_systemd_unit": "fireflint-hub-test-api.service",
+    "admin_systemd_unit": "fireflint-hub-nginx-test.service",
+    "database_systemd_unit": null,
+    "restart_scope_evidence": "docs/E1-MANUELLER-WIEDERANLAUF-2026-09-22.md",
+    "fixture_manifest_reference": null,
+    "cleanup_policy": "Only newly created and identity-checked resources of the recorded run; preserve existing data and fixtures.",
+    "prior_release_profile_note": "Earlier proposed release ports18090/15433 belong to the mobile fixture; do not reset or reuse for E1."
+  }
+}

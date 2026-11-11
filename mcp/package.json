@@ -1,0 +1,11 @@
+{
+  "name": "@fireflint/mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol (MCP) server for the FireFlint content hub",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "fireflint-mcp": "src/server.mjs" },
+  "files": ["src"],
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node src/server.mjs", "test": "node --test test/*.test.mjs" }
+}

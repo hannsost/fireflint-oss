@@ -1,0 +1,10 @@
+{
+  "profile": "retail",
+  "standards": ["EANCOM", "ASC X12"],
+  "documents": ["orders", "catalog", "inventory", "despatch", "invoice"],
+  "requirements": {
+    "applicationAcknowledgement": true,
+    "highVolume": true,
+    "replay": true
+  }
+}

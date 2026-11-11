@@ -1,0 +1,28 @@
+{{- if not .Values.runtime.existingSecret }}{{ fail "runtime.existingSecret is required; the chart never generates or rotates credentials" }}{{ end -}}
+{{- if and (not .Values.assets.existingClaim) (not .Values.assets.storageClass) }}{{ fail "assets.storageClass or assets.existingClaim is required" }}{{ end -}}
+{{- if ne (int .Values.api.replicas) 1 }}{{ fail "FireFlint currently requires exactly one API replica" }}{{ end -}}
+{{- if and .Values.bootstrap.enabled (not .Values.bootstrap.existingSecret) }}{{ fail "bootstrap.existingSecret is required when bootstrap.enabled=true" }}{{ end -}}
+{{- if not .Values.ingress.host }}{{ fail "ingress.host is required for the public origin/CORS contract" }}{{ end -}}
+{{- if .Values.ingress.enabled -}}
+  {{- if not .Values.ingress.className }}{{ fail "ingress.className is required" }}{{ end -}}
+  {{- if not .Values.ingress.tlsSecretName }}{{ fail "ingress.tlsSecretName is required; HTTPS is mandatory" }}{{ end -}}
+{{- end -}}
+{{- if .Values.networkPolicy.enabled -}}
+  {{- if not .Values.networkPolicy.ingressPeers }}{{ fail "networkPolicy.ingressPeers must select the real ingress controller" }}{{ end -}}
+  {{- if not .Values.networkPolicy.databasePeers }}{{ fail "networkPolicy.databasePeers must select the external PostgreSQL endpoint" }}{{ end -}}
+{{- end -}}
+
+{{- if .Values.oidc.enabled -}}
+  {{- if not (hasPrefix "https://" .Values.oidc.issuerUrl) }}{{ fail "oidc.issuerUrl must use HTTPS" }}{{ end -}}
+  {{- if not .Values.oidc.clientId }}{{ fail "oidc.clientId is required" }}{{ end -}}
+  {{- if not .Values.oidc.existingSecret }}{{ fail "oidc.existingSecret is required" }}{{ end -}}
+  {{- if and .Values.networkPolicy.enabled (not .Values.networkPolicy.allowPublicHTTPS) (not .Values.networkPolicy.oidcPeers) }}{{ fail "OIDC requires explicit networkPolicy.oidcPeers or allowPublicHTTPS" }}{{ end -}}
+{{- end -}}
+
+{{- if .Values.instagram.enabled -}}
+  {{- if and (eq .Values.instagram.loginMode "unified") (not .Values.instagram.configurationId) }}{{ fail "instagram.configurationId is required for unified login" }}{{ end -}}
+  {{- if and (eq .Values.instagram.loginMode "instagram_login") .Values.instagram.configurationId }}{{ fail "instagram.configurationId is only valid for unified login" }}{{ end -}}
+  {{- if not .Values.instagram.existingSecret }}{{ fail "instagram.existingSecret is required" }}{{ end -}}
+  {{- if not .Values.instagram.apiVersion }}{{ fail "instagram.apiVersion must match the actual Meta app" }}{{ end -}}
+  {{- if and .Values.networkPolicy.enabled (not .Values.networkPolicy.allowPublicHTTPS) }}{{ fail "Instagram requires allowPublicHTTPS for Meta endpoints" }}{{ end -}}
+{{- end -}}

@@ -1,0 +1,5 @@
+{
+  "profile": "b2b-privacy",
+  "connectors": ["commerce", "forms-workflow", "edi"],
+  "features": ["business-contact-access", "processor-register", "transfers"]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "sitegraph-visual",
+  "private": true,
+  "type": "module",
+  "description": "Visual self-review: render pages at multiple viewports and screenshot them.",
+  "scripts": {
+    "shoot": "node shoot.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

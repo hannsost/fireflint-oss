@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitegraph-cluster-bff
+  namespace: sitegraph-system
+  labels:
+    app.kubernetes.io/name: sitegraph-cluster-bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sitegraph-cluster-bff
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sitegraph-cluster-bff
+    spec:
+      serviceAccountName: sitegraph-cluster-bff
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: cluster-bff
+          image: ghcr.io/sitegraph/sitegraph-cluster-bff:0.1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BFF_BIND
+              value: "0.0.0.0:8091"
+            - name: BFF_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_DEPLOYMENT
+              value: sitegraph-storage-operator
+            # Must match the core's JWT_SECRET so it can verify access tokens.
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sitegraph-cluster-bff
+                  key: jwt-secret
+            - name: RUST_LOG
+              value: info,kube=warn
+          ports:
+            - name: http
+              containerPort: 8091
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true

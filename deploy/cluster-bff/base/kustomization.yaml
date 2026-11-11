@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Namespace `sitegraph-system` is created by the operator deployment
+# (deploy/operator). Apply that first, or add namespace.yaml here.
+resources:
+  - service-account.yaml
+  - rbac.yaml
+  - deployment.yaml
+  - service.yaml

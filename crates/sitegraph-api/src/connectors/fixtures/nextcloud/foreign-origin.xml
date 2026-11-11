@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<v:multistatus xmlns:v="DAV:" xmlns:store="http://owncloud.org/ns">
+  <v:response>
+    <v:href>https://foreign.example.org/remote.php/dav/files/fixture/Team/external.txt</v:href>
+    <v:propstat>
+      <v:prop>
+        <v:displayname>external.txt</v:displayname>
+        <store:fileid>104</store:fileid>
+        <v:getetag>&quot;fixture-104&quot;</v:getetag>
+        <v:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</v:getlastmodified>
+        <v:getcontenttype>text/plain</v:getcontenttype>
+        <v:getcontentlength>8</v:getcontentlength>
+        <v:resourcetype></v:resourcetype>
+        <store:permissions>RG</store:permissions>
+      </v:prop>
+      <v:status>HTTP/1.1 200 OK</v:status>
+    </v:propstat>
+  </v:response>
+</v:multistatus>

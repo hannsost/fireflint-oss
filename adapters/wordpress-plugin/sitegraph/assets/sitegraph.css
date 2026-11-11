@@ -1,0 +1,32 @@
+/* SiteGraph frontend styles (WP1.9). Auto-stacks on narrow screens. */
+.sitegraph-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.sitegraph-item {
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.sitegraph-title {
+  font-weight: 700;
+  font-size: 1.1em;
+  margin-bottom: 0.35rem;
+}
+.sitegraph-field {
+  color: #333;
+  line-height: 1.5;
+}
+.sitegraph-empty {
+  color: #777;
+}
+.sitegraph-stale-note {
+  font-size: 0.85em;
+  color: #8a6d00;
+  background: #fff6d6;
+  border: 1px solid #e6cf66;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}

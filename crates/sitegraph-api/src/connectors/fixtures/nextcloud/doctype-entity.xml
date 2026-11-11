@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE d:multistatus [<!ENTITY synthetic "SYNTHETIC_ENTITY_SENTINEL">]>
+<d:multistatus xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+  <d:response>
+    <d:href>/remote.php/dav/files/fixture/Team/entity.txt</d:href>
+    <d:propstat>
+      <d:prop>
+        <d:displayname>&synthetic;</d:displayname>
+        <oc:fileid>105</oc:fileid>
+        <d:getetag>&quot;fixture-105&quot;</d:getetag>
+        <d:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</d:getlastmodified>
+        <d:getcontenttype>text/plain</d:getcontenttype>
+        <d:getcontentlength>8</d:getcontentlength>
+        <d:resourcetype></d:resourcetype>
+        <oc:permissions>RG</oc:permissions>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+  </d:response>
+</d:multistatus>

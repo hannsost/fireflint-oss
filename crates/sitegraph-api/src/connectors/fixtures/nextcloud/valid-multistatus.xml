@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<v:multistatus xmlns:v="DAV:" xmlns:store="http://owncloud.org/ns">
+  <v:response>
+    <v:href>/remote.php/dav/files/fixture/Team/</v:href>
+    <v:propstat>
+      <v:prop>
+        <v:displayname>Team</v:displayname>
+        <store:fileid>100</store:fileid>
+        <v:getetag>&quot;fixture-100&quot;</v:getetag>
+        <v:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</v:getlastmodified>
+        <v:getcontenttype>text/plain</v:getcontenttype>
+        <v:getcontentlength>0</v:getcontentlength>
+        <v:resourcetype><v:collection/></v:resourcetype>
+        <store:permissions>RG</store:permissions>
+      </v:prop>
+      <v:status>HTTP/1.1 200 OK</v:status>
+    </v:propstat>
+  </v:response>
+  <v:response>
+    <v:href>/remote.php/dav/files/fixture/Team/Gr%C3%BC%C3%9Fe%20%26%20Plan.txt</v:href>
+    <v:propstat>
+      <v:prop>
+        <v:displayname>Grüße &amp; Plan.txt</v:displayname>
+        <store:fileid>101</store:fileid>
+        <v:getetag>&quot;fixture-101&quot;</v:getetag>
+        <v:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</v:getlastmodified>
+        <v:getcontenttype>text/plain</v:getcontenttype>
+        <v:getcontentlength>42</v:getcontentlength>
+        <v:resourcetype></v:resourcetype>
+        <store:permissions>RG</store:permissions>
+      </v:prop>
+      <v:status>HTTP/1.1 200 OK</v:status>
+    </v:propstat>
+  </v:response>
+  <v:response>
+    <v:href>https://cloud.example.org/remote.php/dav/files/fixture/Team/Q3%20%3Cfinal%3E.pdf</v:href>
+    <v:propstat>
+      <v:prop>
+        <v:displayname>Q3 &lt;final&gt;.pdf</v:displayname>
+        <store:fileid>102</store:fileid>
+        <v:getetag>&quot;fixture-102&quot;</v:getetag>
+        <v:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</v:getlastmodified>
+        <v:getcontenttype>application/pdf</v:getcontenttype>
+        <v:getcontentlength>2048</v:getcontentlength>
+        <v:resourcetype></v:resourcetype>
+        <store:permissions>RG</store:permissions>
+      </v:prop>
+      <v:status>HTTP/1.1 200 OK</v:status>
+    </v:propstat>
+  </v:response>
+</v:multistatus>

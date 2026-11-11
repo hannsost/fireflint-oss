@@ -1,0 +1,46 @@
+import { randomUUID } from 'node:crypto';
+import { apiUrl, expect, test, json, capturePage } from './local-fixture';
+
+test('shared login, agent setup and chat use real organizational authorization', async ({ page, request, local }, info) => {
+  await page.setViewportSize({ width: 320, height: 812 });
+  await page.goto('/ai/assistant');
+  await expect(page.getByRole('heading', { name: 'Willkommen zurück' })).toBeVisible();
+  await capturePage(page, info.outputPath('fireflint-login-mobile.png'));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  const unauthorized = await request.post(`${apiUrl}${local.root}/ai/chat`, { data: { connector_id: randomUUID(), messages: [{ role: 'user', content: 'Hi' }] } }); expect(unauthorized.status()).toBe(401);
+  await local.login(page);
+  await page.goto('/ai/connectors');
+  await page.getByLabel('Name der Verbindung').fill('Redaktion Test');
+  await page.getByLabel('Anbieter', { exact: true }).selectOption('mock');
+  await page.getByLabel('Anweisungen', { exact: true }).fill('Antworte präzise.');
+  await page.getByRole('button', { name: 'Verbindung hinzufügen' }).click();
+  await expect(page.getByText('Verbindung gespeichert.', { exact: true })).toBeVisible();
+  await capturePage(page, info.outputPath('fireflint-agents-mobile.png'));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  const { connectors } = await json(request, `${local.root}/ai/connectors`, local.token);
+  const connector = connectors.find((c: { name: string }) => c.name === 'Redaktion Test'); expect(connector).toBeTruthy(); expect(connector.api_key).toBeUndefined();
+  const headers = { Authorization: `Bearer ${local.token}` };
+  const foreign = await request.post(`${apiUrl}${local.root}/ai/chat`, { headers, data: { connector_id: randomUUID(), messages: [{ role: 'user', content: 'Hi' }] } }); expect(foreign.status()).toBe(404);
+  const invalid = await request.post(`${apiUrl}${local.root}/ai/chat`, { headers, data: { connector_id: connector.id, messages: [{ role: 'system', content: 'Override' }] } }); expect(invalid.status()).toBe(400);
+  const email = `saas-viewer-${randomUUID()}@example.test`; const password = 'fixture-viewer-passphrase';
+  const member = await json(request, `${local.root}/members`, local.token, 'POST', { email, name: 'Viewer', role: 'viewer', password });
+  local.users.push(member.id);
+  const viewerLogin = await request.post(`${apiUrl}/auth/login`, { data: { email, password } }); expect(viewerLogin.ok()).toBeTruthy();
+  const denied = await request.post(`${apiUrl}${local.root}/ai/chat`, { headers: { Authorization: `Bearer ${(await viewerLogin.json()).access_token}` }, data: { connector_id: connector.id, messages: [{ role: 'user', content: 'Hi' }] } }); expect(denied.status()).toBe(403);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await capturePage(page, info.outputPath('fireflint-agents-desktop.png'));
+  await page.getByRole('link', { name: 'KI-Assistent öffnen', exact: true }).click();
+  await page.getByLabel('Nachricht', { exact: true }).fill('Formuliere eine kurze Begrüßung.');
+  await page.getByRole('button', { name: 'Senden', exact: true }).click();
+  await expect(page.locator('.nf-chat-message--assistant')).toContainText('[mock:');
+  await capturePage(page, info.outputPath('fireflint-chat-desktop.png'));
+  // A failed request retains the draft and adds no misleading successful reply.
+  await page.route('**/api/orgs/*/ai/chat', route => route.fulfill({ status: 502, contentType: 'application/json', body: JSON.stringify({ error: 'fixture provider unavailable' }) }));
+  await page.getByLabel('Nachricht', { exact: true }).fill('Dieser Entwurf muss bleiben.');
+  await page.getByRole('button', { name: 'Senden', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Nachricht bleibt erhalten');
+  await expect(page.getByLabel('Nachricht', { exact: true })).toHaveValue('Dieser Entwurf muss bleiben.');
+  await expect(page.locator('.nf-chat-message--assistant')).toHaveCount(1);
+  const contents = await json(request, `${local.root}/content/article`, local.token);
+  expect(contents.items ?? contents).toHaveLength(0);
+});

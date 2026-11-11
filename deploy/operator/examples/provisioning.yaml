@@ -1,0 +1,68 @@
+# O3 example: managed PostgreSQL provisioning + an external store.
+# Apply after the operator (with O3 RBAC) is installed:
+#   kubectl apply -f deploy/operator/examples/provisioning.yaml
+#   kubectl get sgds -n sitegraph-system -w
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphStorageProfile
+metadata:
+  name: standard-postgres
+  namespace: sitegraph-system
+spec:
+  postgres:
+    image: postgres:17
+    majorVersion: 17
+    replicas: 1
+  volume:
+    storageClassName: standard
+    size: 1Gi
+    allowExpansion: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+---
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphDataStore
+metadata:
+  name: org-a-content
+  namespace: sitegraph-system
+spec:
+  organizationId: org-a
+  domain: content
+  dataCategory: personal
+  topology: cluster_per_tenant
+  region: eu-central
+  storageProfileRef: standard-postgres
+  desiredSchemaVersion: "1"
+  deletionPolicy: Delete
+---
+# External store: references a pre-existing credential secret (no provisioning).
+apiVersion: v1
+kind: Secret
+metadata:
+  name: external-demo-credentials
+  namespace: sitegraph-system
+type: Opaque
+stringData:
+  username: external
+  password: placeholder
+  database: external_demo
+---
+apiVersion: platform.sitegraph.io/v1alpha1
+kind: SiteGraphDataStore
+metadata:
+  name: ext-demo
+  namespace: sitegraph-system
+spec:
+  organizationId: org-b
+  domain: content
+  dataCategory: public
+  topology: external
+  region: eu-central
+  deletionPolicy: Retain
+  external:
+    endpointRef: external-demo-endpoint
+    credentialSecretRef: external-demo-credentials

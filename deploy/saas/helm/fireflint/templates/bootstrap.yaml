@@ -1,0 +1,56 @@
+{{- if .Values.bootstrap.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "fireflint.name" . }}-bootstrap-{{ .Values.bootstrap.runId }}
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        {{- include "fireflint.labels" . | nindent 8 }}
+        app.kubernetes.io/component: bootstrap
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile: { type: RuntimeDefault }
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: migrate
+          image: {{ include "fireflint.image" .Values.api.image | quote }}
+          args: [migrate]
+          env: {{- include "fireflint.runtimeEnv" . | nindent 12 }}
+          resources: {{- toYaml .Values.api.resources | nindent 12 }}
+          securityContext: {{- include "fireflint.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            {{- include "fireflint.caMount" . | nindent 12 }}
+      containers:
+        - name: bootstrap
+          image: {{ include "fireflint.image" .Values.api.image | quote }}
+          args: [bootstrap-admin]
+          env:
+            {{- include "fireflint.runtimeEnv" . | nindent 12 }}
+            {{- range $env, $key := dict "BOOTSTRAP_ADMIN_EMAIL" "email" "BOOTSTRAP_ADMIN_PASSWORD" "password" "BOOTSTRAP_ADMIN_ORG_NAME" "org-name" "BOOTSTRAP_ADMIN_ORG_SLUG" "org-slug" }}
+            - name: {{ $env }}
+              valueFrom:
+                secretKeyRef: { name: {{ $.Values.bootstrap.existingSecret | quote }}, key: {{ $key }} }
+            {{- end }}
+          resources: {{- toYaml .Values.api.resources | nindent 12 }}
+          securityContext: {{- include "fireflint.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            {{- include "fireflint.caMount" . | nindent 12 }}
+      volumes:
+        - name: tmp
+          emptyDir: { sizeLimit: 64Mi }
+        {{- include "fireflint.caVolume" . | nindent 8 }}
+{{- end }}

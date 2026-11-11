@@ -1,0 +1,14 @@
+**
+!Cargo.toml
+!Cargo.lock
+!crates/
+!crates/**
+!operator/
+!operator/**
+!migrations/
+!migrations/**
+**/.env
+**/.env.*
+**/target
+**/node_modules
+**/*.log

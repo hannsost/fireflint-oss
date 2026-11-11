@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "fireflint.name" . }}-api
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "fireflint.name" . }}-api-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        {{- include "fireflint.labels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: {{ .Values.api.terminationGracePeriodSeconds }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: migrate
+          image: {{ include "fireflint.image" .Values.api.image | quote }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          args: [migrate]
+          env: {{- include "fireflint.runtimeEnv" . | nindent 12 }}
+          resources: {{- toYaml .Values.api.resources | nindent 12 }}
+          securityContext: {{- include "fireflint.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            {{- include "fireflint.caMount" . | nindent 12 }}
+      containers:
+        - name: api
+          image: {{ include "fireflint.image" .Values.api.image | quote }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          args: [serve]
+          env:
+            {{- include "fireflint.runtimeEnv" . | nindent 12 }}
+            {{- include "fireflint.oidcEnv" . | nindent 12 }}
+            {{- include "fireflint.instagramEnv" . | nindent 12 }}
+            {{- if .Values.campaigns.dispatchExistingSecret }}
+            - name: FIREFLINT_CAMPAIGN_DISPATCH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.campaigns.dispatchExistingSecret | quote }}
+                  key: {{ .Values.campaigns.dispatchSecretKey | quote }}
+            {{- end }}
+            - { name: BIND, value: "0.0.0.0:8080" }
+            - { name: ASSET_DIR, value: /var/lib/fireflint/assets }
+            - { name: AI_ALLOWED_PROVIDER_HOSTS, value: {{ .Values.runtime.aiAllowedProviderHosts | quote }} }
+            - { name: WEBHOOK_ALLOW_PRIVATE, value: "false" }
+          ports: [{ name: http, containerPort: 8080 }]
+          startupProbe:
+            httpGet: { path: /readyz, port: http }
+            {{- toYaml .Values.api.startupProbe | nindent 12 }}
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+            {{- toYaml .Values.api.readinessProbe | nindent 12 }}
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            {{- toYaml .Values.api.livenessProbe | nindent 12 }}
+          resources: {{- toYaml .Values.api.resources | nindent 12 }}
+          securityContext: {{- include "fireflint.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - { name: assets, mountPath: /var/lib/fireflint/assets }
+            - { name: tmp, mountPath: /tmp }
+            {{- include "fireflint.caMount" . | nindent 12 }}
+      volumes:
+        - name: assets
+          persistentVolumeClaim: { claimName: {{ include "fireflint.claim" . }} }
+        - name: tmp
+          emptyDir: { sizeLimit: 64Mi }
+        {{- include "fireflint.caVolume" . | nindent 8 }}

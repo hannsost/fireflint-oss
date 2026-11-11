@@ -1,0 +1,17 @@
+{
+  "source_project": "flintplate",
+  "export_version": 1,
+  "received_on": "2026-09-11",
+  "files": [
+    {
+      "source": "/srv/fireflint-work/flintplate/docs/FIREFLINT-MENU-SNAPSHOT-V1.schema.json",
+      "file": "schema/FIREFLINT-MENU-SNAPSHOT-V1.schema.json",
+      "sha256": "7d4f09cf4e87e70e3a9a7de0173b5a19d2bb186edc5371fcadf079612cd9b7bb"
+    },
+    {
+      "source": "/srv/fireflint-work/flintplate/docs/FIREFLINT-MENU-SNAPSHOT-V1.md",
+      "file": "schema/FIREFLINT-MENU-SNAPSHOT-V1.md",
+      "sha256": "7bc59a5b714ced0f6944676c70ed04e9afd4f59e2c98c543ed7e9c76795cc4cb"
+    }
+  ]
+}

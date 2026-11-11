@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sitegraph-cluster-bff
+  namespace: sitegraph-system
+  labels:
+    app.kubernetes.io/name: sitegraph-cluster-bff
+spec:
+  selector:
+    app.kubernetes.io/name: sitegraph-cluster-bff
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

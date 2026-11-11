@@ -1,0 +1,47 @@
+/target
+/data
+.env
+.env.*
+!.env.example
+*.log
+node_modules/
+admin/test-results/
+dist/
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+
+# Interne Produkt- und Entwicklungsunterlagen
+whitepaper*
+roadmap.md
+entwicklungsplan*.md
+modules/**/CLAUDE-HANDOFF.md
+modules/CLAUDE-HANDOFF.md
+modules/FOUNDATION-REVIEW*.md
+modules/IMPLEMENTATION-PLAN.md
+modules/OPERATOR-DEVELOPMENT-PLAN.md
+
+# Lokale Kubernetes-/Tool-Artefakte
+.kube/
+.kind/
+
+# --- secrets & local env (added for OSS release) ---
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+kubeconfig*
+*.kubeconfig
+secrets/
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+# --- build output ---
+target/
+data/
+# --- editors / OS ---
+.idea/
+.vscode/
+*.swp

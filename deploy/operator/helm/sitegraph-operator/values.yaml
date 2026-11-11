@@ -1,0 +1,17 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/sitegraph/sitegraph-storage-operator
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+watchNamespace: ""
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+

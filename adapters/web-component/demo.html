@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SiteGraph – Demo: zwei Websites, eine Datenquelle</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+      /* auto-stacks to one column on narrow screens (found via visual review) */
+      .sites { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+      .site { border: 1px solid #ddd; border-radius: 10px; padding: 1rem; }
+      h2 { margin-top: 0; font-size: 1.1rem; }
+      .hint { color: #666; font-size: .9em; }
+      code { background: #f3f3f3; padding: 1px 5px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>FireFlint – öffentliche Beispiel-Einbindung</h1>
+    <p class="hint">
+      Beide „Websites" lesen dieselben Standort-Daten aus dem Core. Die
+      Karriere-Website zeigt den Darmstadt-Standort mit lokalem Override
+      (anderes Telefon + andere Zeiten) – gepflegt wird das Objekt aber nur
+      einmal. Trage je Website einen öffentlichen, channel-gebundenen Delivery-Token ein (siehe README). Browser-Tokens sind für Besucher sichtbar.
+    </p>
+
+    <div class="sites">
+      <div class="site">
+        <h2>hauptfirma.de (Channel: hauptseite)</h2>
+        <sitegraph-content
+          api="http://localhost:8080"
+          channel="hauptseite"
+          module="standort"
+          token="PUBLIC_HAUPTSEITE_DELIVERY_TOKEN"
+        ></sitegraph-content>
+      </div>
+
+      <div class="site">
+        <h2>karriere.hauptfirma.de (Channel: karriere)</h2>
+        <sitegraph-content
+          api="http://localhost:8080"
+          channel="karriere"
+          module="standort"
+          token="PUBLIC_KARRIERE_DELIVERY_TOKEN"
+        ></sitegraph-content>
+      </div>
+    </div>
+
+    <script src="./sitegraph-content.js"></script>
+  </body>
+</html>

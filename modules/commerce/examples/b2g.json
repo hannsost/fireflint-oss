@@ -1,0 +1,23 @@
+{
+  "profile": "b2g-default",
+  "modules": {
+    "catalog": "contract-catalog",
+    "pricing": "contract-pricing",
+    "contracts": "framework-contracts",
+    "inventory": "erp-inventory",
+    "customers": "public-sector-accounts",
+    "cart": "sitegraph-cart",
+    "checkout": "formal-procurement-checkout",
+    "quotes": "sitegraph-quotes",
+    "approvals": "multi-step-approvals",
+    "budgets": "budget-control",
+    "invoicing": "xrechnung-provider",
+    "erp": "erp-connector"
+  },
+  "settings": {
+    "purchaseOrderNumberRequired": true,
+    "costCenterRequired": true,
+    "budgetCheckRequired": true,
+    "invoiceFormat": "xrechnung"
+  }
+}

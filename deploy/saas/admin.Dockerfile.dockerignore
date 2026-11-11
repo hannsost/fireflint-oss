@@ -1,0 +1,15 @@
+**
+!admin/
+!admin/**
+!deploy/
+!deploy/saas/
+!deploy/saas/nginx.conf.template
+!deploy/saas/nginx-security-headers.conf
+!deploy/saas/admin-entrypoint.sh
+**/.env
+**/.env.*
+**/node_modules
+**/dist
+**/test-results
+**/playwright-report
+**/*.log

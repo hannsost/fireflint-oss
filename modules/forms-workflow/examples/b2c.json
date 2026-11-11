@@ -1,0 +1,11 @@
+{
+  "profile": "b2c-forms",
+  "modules": {
+    "definitions": "sitegraph-forms",
+    "validation": "sitegraph-validation",
+    "files": "object-storage",
+    "spam": "spam-provider",
+    "notifications": "email-provider",
+    "retention": "sitegraph-retention"
+  }
+}

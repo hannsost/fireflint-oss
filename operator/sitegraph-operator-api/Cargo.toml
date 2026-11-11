@@ -1,0 +1,21 @@
+[package]
+name = "sitegraph-operator-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+chrono.workspace = true
+kube.workspace = true
+k8s-openapi.workspace = true
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+k8s-openapi = { workspace = true, features = ["latest", "schemars"] }
+serde_yaml.workspace = true
+
+[lints]
+workspace = true

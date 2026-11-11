@@ -1,0 +1,5 @@
+{
+  "profile": "b2c-privacy",
+  "connectors": ["content", "commerce", "forms-workflow", "edi"],
+  "features": ["consent", "access", "erasure", "portability", "retention"]
+}

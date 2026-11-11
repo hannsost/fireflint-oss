@@ -1,0 +1,37 @@
+{
+  "name": "fireflint-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "EXPO_NO_DOTENV=1 EXPO_NO_TELEMETRY=1 expo start --host lan --port 18081",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/core*.test.ts",
+    "test:api": "E2E_DATABASE=release tsx --test tests/api*.test.ts",
+    "prebuild": "EXPO_NO_DOTENV=1 EXPO_NO_TELEMETRY=1 expo prebuild --no-install",
+    "android": "bash tools/build-android.sh"
+  },
+  "dependencies": {
+    "expo": "~57.0.24",
+    "expo-build-properties": "~57.0.21",
+    "expo-constants": "~57.0.2",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
+    "react-native-url-polyfill": "3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "@types/react": "~19.2.2",
+    "tsx": "^4.20.0",
+    "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
+  }
+}

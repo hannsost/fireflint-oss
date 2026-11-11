@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "sitegraph/content",
+  "title": "SiteGraph Inhalt",
+  "category": "widgets",
+  "icon": "networking",
+  "description": "Zeigt zentral gepflegte SiteGraph-Inhalte für einen Channel an (serverseitig gerendert).",
+  "textdomain": "sitegraph",
+  "attributes": {
+    "module": { "type": "string", "default": "" },
+    "channel": { "type": "string", "default": "" }
+  },
+  "supports": { "html": false }
+}

@@ -1,0 +1,29 @@
+name: Native client contracts
+
+on:
+  push:
+    paths: ['mobile/**', '.github/workflows/mobile.yml']
+  pull_request:
+    paths: ['mobile/**', '.github/workflows/mobile.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_NO_DOTENV: '1'
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm --prefix mobile ci --ignore-scripts
+      - run: npm --prefix mobile run typecheck
+      - run: npm --prefix mobile test
+      - name: Production native project guards (no signing, no cloud build)
+        run: node mobile/tools/test-native-config.mjs

@@ -1,0 +1,12 @@
+{
+  "name": "@fireflint/flintplate-contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "node ../../admin/node_modules/typescript/bin/tsc -p tsconfig.json",
+    "test": "node tests/contract.test.mjs",
+    "check": "npm run typecheck && npm test"
+  }
+}

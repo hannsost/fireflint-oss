@@ -1,0 +1,53 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sitegraph-storage-operator
+  namespace: sitegraph-system
+rules:
+  # CRs: watch + finalizer management (update/patch on the object itself).
+  - apiGroups: ["platform.sitegraph.io"]
+    resources:
+      - sitegraphstorageprofiles
+      - sitegraphdatastores
+      - sitegraphstoragebindings
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["platform.sitegraph.io"]
+    resources:
+      - sitegraphstorageprofiles/status
+      - sitegraphdatastores/status
+      - sitegraphstoragebindings/status
+    verbs: ["get", "patch", "update"]
+  # Managed PostgreSQL provisioning (O3): only the resources actually applied.
+  - apiGroups: [""]
+    resources: ["secrets", "services", "configmaps", "persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  # Read-only: inspect pod status to detect bad image / crash / unschedulable.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sitegraph-storage-operator
+  namespace: sitegraph-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sitegraph-storage-operator
+subjects:
+  - kind: ServiceAccount
+    name: sitegraph-storage-operator
+    namespace: sitegraph-system

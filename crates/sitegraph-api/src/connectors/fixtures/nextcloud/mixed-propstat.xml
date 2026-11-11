@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d:multistatus xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+  <d:response>
+    <d:href>/remote.php/dav/files/fixture/Team/</d:href>
+    <d:propstat>
+      <d:prop>
+        <d:displayname>Team</d:displayname>
+        <oc:fileid>100</oc:fileid>
+        <d:getetag>&quot;fixture-100&quot;</d:getetag>
+        <d:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</d:getlastmodified>
+        <d:getcontenttype>text/plain</d:getcontenttype>
+        <d:getcontentlength>0</d:getcontentlength>
+        <d:resourcetype><d:collection/></d:resourcetype>
+        <oc:permissions>RG</oc:permissions>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+  </d:response>
+  <d:response>
+    <d:href>/remote.php/dav/files/fixture/Team/Ohne%20Typ.txt</d:href>
+    <d:propstat>
+      <d:prop>
+        <d:displayname>Ohne Typ.txt</d:displayname>
+        <oc:fileid>103</oc:fileid>
+        <d:getetag>&quot;fixture-103&quot;</d:getetag>
+        <d:getlastmodified>Wed, 23 Sep 2026 10:00:00 GMT</d:getlastmodified>
+        
+        <d:getcontentlength>0</d:getcontentlength>
+        <d:resourcetype></d:resourcetype>
+        <oc:permissions>RG</oc:permissions>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+    <d:propstat>
+      <d:prop><d:getcontenttype/></d:prop>
+      <d:status>HTTP/1.1 404 Not Found</d:status>
+    </d:propstat>
+  </d:response>
+</d:multistatus>

@@ -1,0 +1,11 @@
+{
+  "profile": "b2b-forms",
+  "modules": {
+    "definitions": "sitegraph-forms",
+    "files": "object-storage",
+    "workflows": "sitegraph-workflows",
+    "tasks": "sitegraph-tasks",
+    "notifications": "email-provider",
+    "integrations": "crm-connector"
+  }
+}

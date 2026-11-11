@@ -1,0 +1,25 @@
+.flintplate-page, .flintplate-page > *, .flintplate-page .hub-title > div { min-width: 0; }
+.flintplate-page h1, .flintplate-page td, .flintplate-page dd,
+.flintplate-page p, .flintplate-page summary { overflow-wrap: anywhere; }
+.flintplate-manual, .flintplate-review { padding: 1rem 1.2rem; background: #f2f5ed; border-left: 3px solid #8da17b; border-radius: 0 12px 12px 0; }
+.flintplate-input { margin-bottom: 1rem; }
+.flintplate-input details { margin-top: 1rem; }
+.flintplate-input textarea { width: 100%; max-width: 100%; box-sizing: border-box; }
+.flintplate-input input[type=file] { width: 100%; min-width: 0; max-width: 100%; }
+.flintplate-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem; }
+.flintplate-comparison > section { min-width: 0; }
+.flintplate-items { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: .8rem; }
+.flintplate-items > li { min-width: 0; padding: 1rem; border: 1px solid var(--border); border-radius: 12px; }
+.flintplate-item-title { display: flex; justify-content: space-between; align-items: start; gap: .8rem; }
+.flintplate-item-title > div { min-width: 0; }
+.flintplate-item-title h4 { margin: .3rem 0; overflow-wrap: anywhere; }
+.flintplate-item-title > strong { flex-shrink: 0; }
+.flintplate-description { white-space: pre-wrap; }
+.flintplate-json { margin-top: 1rem; }
+.flintplate-json pre { max-height: 24rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; }
+.flintplate-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 700px) {
+  .flintplate-comparison { grid-template-columns: 1fr; }
+  .flintplate-page .hub-actions > * { max-width: 100%; }
+  .flintplate-item-title { flex-wrap: wrap; }
+}

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fireflint.name" . }}-api
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+    app.kubernetes.io/component: api
+  ports:
+    - { name: http, port: 8080, targetPort: http }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fireflint.name" . }}-api-headless
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+    app.kubernetes.io/component: api
+  ports:
+    - { name: http, port: 8080, targetPort: http }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fireflint.name" . }}-admin
+  labels: {{- include "fireflint.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: {{ include "fireflint.name" . }}
+    app.kubernetes.io/component: admin
+  ports:
+    - { name: http, port: 8080, targetPort: http }

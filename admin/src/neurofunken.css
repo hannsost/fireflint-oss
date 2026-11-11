@@ -1,0 +1,252 @@
+/* Shared Neurofunken product foundation. Keep byte-identical in sibling apps. */
+@font-face {
+  font-family: "Manrope Variable";
+  src: url("/fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  --nf-font: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --nf-paper: #f7f7f0;
+  --nf-surface: #fff;
+  --nf-ink: #1b352b;
+  --nf-muted: #606960;
+  --nf-scrollbar-thumb: #839183;
+  --nf-line: #dedfd5;
+  --nf-forest: #173f31;
+  --nf-sidebar-ink: #f1f5ec;
+  --nf-sidebar-muted: #bdcfc3;
+  --nf-lime: #d2f78b;
+  --nf-soft: #edf0e7;
+  --nf-radius: 12px;
+  --nf-focus: #a64224;
+  --nf-space-1: 4px;
+  --nf-space-2: 8px;
+  --nf-space-3: 12px;
+  --nf-space-4: 16px;
+  --nf-space-5: 24px;
+  --nf-space-6: 32px;
+  --nf-control-height: 44px;
+  --nf-sidebar-width: 264px;
+  --nf-content-width: 1320px;
+
+  --nf-text-body: 14px;
+  --nf-leading-body: 22px;
+  --nf-text-control: 14px;
+  --nf-leading-control: 20px;
+  --nf-text-heading: 28px;
+  --nf-leading-heading: 36px;
+  --nf-text-section: 18px;
+  --nf-leading-section: 26px;
+  --nf-text-label: 13px;
+  --nf-text-caption: 12px;
+  --nf-leading-caption: 18px;
+  --nf-text-nav: 14px;
+  --nf-weight-body: 400;
+  --nf-weight-label: 500;
+  --nf-weight-control: 600;
+  --nf-weight-heading: 650;
+  --nf-weight-active: 600;
+
+  font-family: var(--nf-font);
+  font-size: 100%;
+  line-height: var(--nf-leading-body);
+  color: var(--nf-ink);
+  background: var(--nf-paper);
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.sidebar,
+.kf-sidebar { --nf-scrollbar-thumb: #799283; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nf-scrollbar-thumb) transparent;
+}
+
+@supports not (scrollbar-color: auto) {
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--nf-scrollbar-thumb); }
+}
+
+@media (forced-colors: active) {
+  * { scrollbar-width: auto; scrollbar-color: auto; }
+}
+
+@supports not (scrollbar-color: auto) {
+  @media (forced-colors: active) {
+    *::-webkit-scrollbar { width: auto; height: auto; }
+    *::-webkit-scrollbar-track { background: Canvas; }
+    *::-webkit-scrollbar-thumb { border: 2px solid Canvas; border-radius: 999px; background: ButtonText; }
+  }
+}
+
+body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--nf-paper); font: var(--nf-weight-body) var(--nf-text-body)/var(--nf-leading-body) var(--nf-font); }
+button, input, select, textarea { font-family: var(--nf-font); }
+button:not(:disabled), summary { cursor: pointer; }
+button, a.button { min-height: var(--nf-control-height); border-radius: 8px; font-size: var(--nf-text-control); line-height: var(--nf-leading-control); font-weight: var(--nf-weight-control); }
+input, select, textarea { font-size: 16px; line-height: var(--nf-leading-control); }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea { min-height: 44px; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--nf-accent, #a64224); }
+:focus-visible { outline: 3px solid var(--nf-focus); outline-offset: 3px; }
+::selection { background: var(--nf-lime); color: var(--nf-ink); }
+
+.nf-brand { display: grid; grid-template-columns: 28px auto; column-gap: 12px; align-items: center; width: max-content; max-width: 100%; text-decoration: none; }
+.nf-brand-symbol { display: block; grid-column: 1; grid-row: 1 / span 2; width: 28px; height: 28px; flex: none; }
+.nf-brand-copy { min-width: 0; grid-column: 2; grid-row: 1 / span 2; display: grid; grid-template-rows: 28px 18px; align-content: center; }
+.nf-brand-name { grid-row: 1; color: var(--nf-brand-ink, var(--nf-sidebar-ink)); font-size: 24px; line-height: 28px; font-weight: 700; letter-spacing: -.5px; white-space: nowrap; }
+.nf-brand-parent { grid-row: 2; color: var(--nf-brand-muted, var(--nf-sidebar-muted)); font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 0; white-space: nowrap; }
+.nf-icon { display: inline-block; flex: 0 0 auto; vertical-align: middle; }
+
+@media (max-width: 850px) {
+  :root { --nf-text-heading: 24px; --nf-leading-heading: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+/* Shared sidebar session footer. The shell keeps navigation in .nf-sidebar-scroll. */
+.nf-sidebar-scroll {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nf-sidebar-session {
+  display: flex;
+  min-width: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--nf-sidebar-ink, #f1f5ec) 16%, transparent);
+  color: var(--nf-sidebar-ink, #f1f5ec);
+  font-family: var(--nf-font, ui-sans-serif, system-ui, sans-serif);
+}
+
+.nf-sidebar-user {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 4px;
+}
+
+.nf-sidebar-avatar {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  color: var(--nf-forest, #173f31);
+  background: var(--nf-lime, #d2f78b);
+  font-size: var(--nf-text-caption, 12px);
+  font-weight: var(--nf-weight-control, 600);
+  line-height: 1;
+}
+
+.nf-sidebar-user-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nf-sidebar-user-copy > span,
+.nf-sidebar-user-copy > small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nf-sidebar-user-copy > span {
+  color: var(--nf-sidebar-ink, #f1f5ec);
+  font-size: var(--nf-text-label, 13px);
+  font-weight: var(--nf-weight-control, 600);
+  line-height: var(--nf-leading-control, 20px);
+}
+
+.nf-sidebar-user-copy > small {
+  color: var(--nf-sidebar-muted, #bdcfc3);
+  font-size: var(--nf-text-caption, 12px);
+  font-weight: var(--nf-weight-body, 400);
+  line-height: var(--nf-leading-caption, 18px);
+}
+
+.nf-sidebar-logout {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--nf-sidebar-ink, #f1f5ec);
+  background: transparent;
+  font-family: var(--nf-font, ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--nf-text-control, 14px);
+  font-weight: var(--nf-weight-control, 600);
+  line-height: var(--nf-leading-control, 20px);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.nf-sidebar-logout:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 12%);
+  background: rgb(255 255 255 / 8%);
+}
+
+.nf-sidebar-logout:focus-visible {
+  outline: 3px solid var(--nf-lime, #d2f78b);
+  outline-offset: -3px;
+}
+
+.nf-sidebar-logout:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.nf-sidebar-logout > svg,
+.nf-sidebar-logout .nf-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.nf-sidebar-session-error {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 8px;
+  color: #ffd2c9;
+  background: rgb(135 56 45 / 28%);
+  font-size: var(--nf-text-caption, 12px);
+  line-height: var(--nf-leading-caption, 18px);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-sidebar-logout { transition: none; }
+}

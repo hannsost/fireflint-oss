@@ -1,0 +1,17 @@
+export const ediEventTypes = {
+  received: "edi.message.received",
+  duplicate: "edi.message.duplicate",
+  verified: "edi.message.verified",
+  parsed: "edi.message.parsed",
+  validated: "edi.message.validated",
+  mapped: "edi.message.mapped",
+  routed: "edi.message.routed",
+  sent: "edi.message.sent",
+  delivered: "edi.message.delivered",
+  acknowledged: "edi.message.acknowledged",
+  failed: "edi.message.failed",
+  quarantined: "edi.message.quarantined",
+  replayed: "edi.message.replayed",
+  partnerActivated: "edi.partner.activated",
+  agreementActivated: "edi.agreement.activated",
+} as const;

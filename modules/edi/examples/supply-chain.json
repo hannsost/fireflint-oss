@@ -1,0 +1,12 @@
+{
+  "profile": "supply-chain",
+  "standards": ["UN/EDIFACT", "ASC X12"],
+  "transports": ["as2", "sftp"],
+  "modules": {
+    "parser": "licensed-edi-parser",
+    "validation": "partner-guide-validator",
+    "mapping": "sitegraph-canonical-mapper",
+    "transport": "as2-sftp-gateway",
+    "archive": "immutable-object-storage"
+  }
+}

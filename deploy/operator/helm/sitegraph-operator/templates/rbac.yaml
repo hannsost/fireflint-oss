@@ -1,0 +1,44 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "sitegraph-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: ["platform.sitegraph.io"]
+    resources: ["sitegraphstorageprofiles", "sitegraphdatastores", "sitegraphstoragebindings"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ["platform.sitegraph.io"]
+    resources: ["sitegraphstorageprofiles/status", "sitegraphdatastores/status", "sitegraphstoragebindings/status"]
+    verbs: ["get", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["secrets", "services", "configmaps", "persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "sitegraph-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "sitegraph-operator.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "sitegraph-operator.fullname" . }}
+    namespace: {{ .Release.Namespace }}

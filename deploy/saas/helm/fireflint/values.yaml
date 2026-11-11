@@ -1,0 +1,94 @@
+# Required production values intentionally have no working/demo defaults.
+fullnameOverride: ""
+imagePullSecrets: []
+runtime:
+  existingSecret: ""
+  # Secret keys: database-url, jwt-secret, ai-connector-encryption-key.
+  aiAllowedProviderHosts: api.anthropic.com
+campaigns:
+  # Optional dispatcher-only credential. Never a customer/model/admin token.
+  dispatchExistingSecret: ""
+  dispatchSecretKey: token
+  # Explicit namespace+pod peers allowed to reach the API on port 8080.
+  ingressPeers: []
+instagram:
+  enabled: false
+  # New Meta apps use unified; older Instagram Login apps keep instagram_login.
+  loginMode: instagram_login
+  # Public Facebook Login for Business configuration ID; unified only.
+  configurationId: ""
+  # Own Secret containing app-id and app-secret. No credentials in values.
+  existingSecret: ""
+  appIdSecretKey: app-id
+  appSecretKey: app-secret
+  # Unified business-webhook verification token, held in existingSecret.
+  webhookVerifyTokenSecretKey: webhook-verify-token
+  # Explicit version supported by the actual Meta app. No guessed default.
+  apiVersion: ""
+oidc:
+  enabled: false
+  # Require an exact /app-fireflint or /all-apps group from introspection.
+  requireAppGroup: false
+  issuerUrl: ""
+  clientId: ""
+  label: "Single Sign-On"
+  # Own secret with key client-secret. Redirects derive from ingress.host.
+  existingSecret: ""
+  clientSecretKey: client-secret
+bootstrap:
+  enabled: false
+  existingSecret: ""
+  # Secret keys: email, password, org-name, org-slug. Change runId to rerun.
+  runId: initial
+database:
+  # Optional CA for DATABASE_URL sslmode=verify-full and
+  # sslrootcert=/etc/fireflint/database/ca.crt. No credential values in Helm.
+  caSecret: ""
+  caKey: ca.crt
+api:
+  replicas: 1
+  image:
+    repository: ""
+    digest: ""
+    pullPolicy: IfNotPresent
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: "2", memory: 1Gi }
+  startupProbe: { periodSeconds: 5, timeoutSeconds: 3, failureThreshold: 120 }
+  readinessProbe: { periodSeconds: 5, timeoutSeconds: 3, failureThreshold: 3 }
+  livenessProbe: { periodSeconds: 15, timeoutSeconds: 3, failureThreshold: 3 }
+  terminationGracePeriodSeconds: 200
+admin:
+  image:
+    repository: ""
+    digest: ""
+    pullPolicy: IfNotPresent
+  resources:
+    requests: { cpu: 25m, memory: 32Mi }
+    limits: { cpu: 250m, memory: 128Mi }
+assets:
+  existingClaim: ""
+  storageClass: ""
+  size: 10Gi
+  accessMode: ReadWriteOnce
+ingress:
+  enabled: true
+  className: ""
+  host: ""
+  tlsSecretName: ""
+  annotations: {}
+networkPolicy:
+  enabled: true
+  # Kubernetes NetworkPolicyPeer lists, e.g. namespaceSelector + podSelector.
+  ingressPeers: []
+  databasePeers: []
+  databasePort: 5432
+  dnsNamespace: kube-system
+  dnsPodLabels: { k8s-app: kube-dns }
+  # Opt-in public IPv4 TCP/443. API additionally validates actual HTTP targets.
+  allowPublicHTTPS: false
+  # Explicit HTTPS identity-provider endpoints, including an internal Keycloak.
+  oidcPeers: []
+  oidcPort: 443
+nodeSelector: {}
+tolerations: []

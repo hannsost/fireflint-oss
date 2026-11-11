@@ -1,0 +1,1 @@
+{"results":[{"id":"101","properties":{"firstname":"Ada","lastname":"Beispiel","email":"ada@example.test","phone":"+49 30 0000","jobtitle":"Einkauf"},"createdAt":"2026-09-01T10:00:00Z","updatedAt":"2026-09-18T10:00:00Z","archived":false}],"paging":{"next":{"after":"102","link":"https://untrusted.invalid/do-not-follow"}}}

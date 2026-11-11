@@ -1,0 +1,40 @@
+stages: [test]
+
+rust:
+  stage: test
+  image: rust:latest
+  variables:
+    CARGO_HOME: .cargo-home
+  cache:
+    key: cargo
+    paths: [target/, .cargo-home/]
+  before_script:
+    - rustup component add rustfmt clippy
+  script:
+    - cargo fmt --all --check
+    - cargo clippy --workspace --all-targets -- -D warnings
+    - cargo test --locked --workspace
+
+admin:
+  stage: test
+  image: node:22
+  script:
+    - cd admin
+    - npm ci
+    - npm run typecheck
+    - npm run test:unit
+
+mcp:
+  stage: test
+  image: node:22
+  script:
+    - cd mcp
+    - npm test
+
+secret_detection:
+  stage: test
+  image:
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""]
+  script:
+    - gitleaks dir . --no-banner --redact

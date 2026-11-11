@@ -1,0 +1,14 @@
+target
+.git
+modules
+adapters
+admin
+tools
+deploy/operator/helm
+data
+**/node_modules
+*.log
+.env
+.env.*
+!.env.example
+

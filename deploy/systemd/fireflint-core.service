@@ -1,0 +1,37 @@
+[Unit]
+Description=FireFlint development API (prebuilt debug binary, 0.0.0.0:8090)
+Documentation=file://%h/Projects/fireflint/deploy/systemd/README.md
+Requires=fireflint-db.service
+After=fireflint-db.service
+PartOf=fireflint.target
+StartLimitIntervalSec=600
+StartLimitBurst=3
+
+[Service]
+Type=exec
+WorkingDirectory=%h/Projects/fireflint
+Environment=PATH=/usr/bin:/bin
+# Public development values only. No EnvironmentFile or dotenv loading.
+Environment=SITEGRAPH_LOAD_DOTENV=0
+Environment=APP_ENV=development
+Environment=BIND=0.0.0.0:8090
+Environment=DATABASE_URL=postgres://sitegraph:sitegraph@127.0.0.1:5433/sitegraph
+Environment=JWT_SECRET=dev-insecure-secret-change-me
+Environment=AI_CONNECTOR_ENCRYPTION_KEY=development-only-connector-key
+Environment=ASSET_DIR=%h/Projects/fireflint/data/assets
+Environment=RUST_LOG=info,sqlx=warn
+Environment=CORS_ALLOWED_ORIGINS=
+Environment=WEBHOOK_ALLOW_PRIVATE=false
+UnsetEnvironment=AI_ALLOWED_PROVIDER_HOSTS
+ExecStartPre=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh preflight-core
+ExecStart=/usr/bin/flock --shared --nonblock --no-fork %h/Projects/fireflint/data/local/stack.lock %h/Projects/fireflint/target/debug/sitegraph
+ExecStartPost=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh ready-core
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=60
+TimeoutStopSec=20
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=fireflint.target

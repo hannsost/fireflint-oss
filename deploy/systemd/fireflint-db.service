@@ -1,0 +1,28 @@
+[Unit]
+Description=FireFlint development PostgreSQL (existing rootless container, 0.0.0.0:5433)
+Documentation=file://%h/Projects/fireflint/deploy/systemd/README.md
+PartOf=fireflint.target
+StartLimitIntervalSec=600
+StartLimitBurst=3
+
+[Service]
+Type=exec
+WorkingDirectory=%h/Projects/fireflint
+Environment=PATH=/usr/bin:/bin
+UnsetEnvironment=CONTAINER_HOST CONTAINER_CONNECTION
+ExecStartPre=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh preflight-db
+# A shared lifetime lock excludes run-local.sh / stop-local.sh's exclusive lock.
+# --no-fork execs podman directly so systemd tracks its attached foreground PID.
+ExecStart=/usr/bin/flock --shared --nonblock --no-fork %h/Projects/fireflint/data/local/stack.lock /usr/bin/podman start --attach --sig-proxy=true fireflint-db
+ExecStartPost=/usr/bin/bash %h/Projects/fireflint/deploy/systemd/check-local-service.sh ready-db
+ExecStop=/usr/bin/podman stop --time 15 fireflint-db
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=45
+TimeoutStopSec=30
+Delegate=yes
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=fireflint.target

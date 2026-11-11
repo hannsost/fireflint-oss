@@ -1,0 +1,9 @@
+FireFlint: https://{{ .Values.ingress.host }}
+
+This release runs exactly one API instance with external PostgreSQL.
+Asset PVC: {{ include "fireflint.claim" . }} (retained on Helm uninstall).
+Runtime Secret: {{ .Values.runtime.existingSecret }} (never generated/rotated by Helm).
+
+Run the explicit bootstrap procedure in docs/SAAS-DEPLOYMENT.md before onboarding.
+Preserve database + asset bytes + the AI encryption key together during backups.
+Operator, BFF, horizontal API scaling and database HA are not included.

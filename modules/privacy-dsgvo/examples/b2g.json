@@ -1,0 +1,5 @@
+{
+  "profile": "b2g-privacy",
+  "connectors": ["content", "forms-workflow", "edi"],
+  "features": ["public-task", "dpia", "breach-management", "legal-holds"]
+}

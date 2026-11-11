@@ -1,0 +1,13 @@
+{
+  "profile": "b2g-forms",
+  "modules": {
+    "definitions": "sitegraph-forms",
+    "files": "secure-object-storage",
+    "signatures": "qualified-signature-provider",
+    "workflows": "formal-workflows",
+    "tasks": "case-tasks",
+    "exports": "xfall-exporter",
+    "integrations": "case-management-connector",
+    "retention": "records-retention"
+  }
+}

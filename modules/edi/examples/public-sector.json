@@ -1,0 +1,10 @@
+{
+  "profile": "public-sector",
+  "standards": ["Peppol BIS Billing 3.0", "XRechnung", "UBL", "CII"],
+  "transports": ["peppol", "api"],
+  "modules": {
+    "validation": "peppol-xrechnung-validator",
+    "transport": "peppol-access-point",
+    "archive": "records-compliant-archive"
+  }
+}

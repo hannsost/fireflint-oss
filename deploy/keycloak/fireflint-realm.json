@@ -1,0 +1,95 @@
+{
+  "realm": "fireflint-local",
+  "enabled": true,
+  "displayName": "FireFlint local OIDC fixture",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "rememberMe": false,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 43200,
+  "ssoSessionMaxLifespan": 86400,
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "eventsEnabled": true,
+  "clients": [
+    {
+      "clientId": "fireflint-hub",
+      "name": "FireFlint isolated hub fixture",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "dev-only-oidc-client-secret",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:28091/oidc/callback"
+      ],
+      "webOrigins": [],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:28091/login",
+        "backchannel.logout.url": "http://127.0.0.1:28090/auth/oidc/backchannel-logout",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "true",
+        "id.token.signed.response.alg": "RS256",
+        "exclude.issuer.from.auth.response": "false"
+      },
+      "defaultClientScopes": [
+        "basic",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [],
+      "protocolMappers": [
+        {
+          "name": "fireflint-introspection-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "fireflint-hub",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "hub-fixture",
+      "email": "oidc-fixture@example.test",
+      "firstName": "OIDC",
+      "lastName": "Fixture",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "dev-only-fixture-user-password",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "hub-unlinked",
+      "email": "owner@demo.test",
+      "firstName": "Unlinked",
+      "lastName": "Fixture",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "dev-only-unlinked-user-password",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

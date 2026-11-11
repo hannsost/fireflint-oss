@@ -1,0 +1,29 @@
+# LOCAL TEST FIXTURE ONLY. Contains public development credentials.
+# Never merge into deploy/saas or expose beyond loopback.
+name: fireflint-hub-oidc
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.4
+    container_name: fireflint-hub-keycloak
+    # Linux host networking lets Keycloak reach the isolated API's loopback
+    # backchannel endpoint. Keycloak itself binds only 127.0.0.1:28180.
+    network_mode: host
+    command:
+      - start-dev
+      - --import-realm
+      - --http-host=127.0.0.1
+      - --http-port=28180
+      - --hostname=http://localhost:28180
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: fixture-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: dev-only-keycloak-admin-password
+      JAVA_OPTS_KC_HEAP: -Xms128m -Xmx512m
+    volumes:
+      - ./fireflint-realm.json:/opt/keycloak/data/import/fireflint-local-realm.json:ro
+      - keycloak-data:/opt/keycloak/data
+    mem_limit: 1g
+    cpus: 1.5
+    restart: unless-stopped
+volumes:
+  keycloak-data:
+    name: fireflint-hub-keycloak-data
